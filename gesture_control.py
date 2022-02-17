@@ -1,30 +1,68 @@
 import handtrakcer as ht
+from pynput.mouse import Button, Controller
 #import connect
 
 class control:
+    last_x = 0
+    last_y = 0
+    current_x = 0
+    current_y = 0
+    scroll_x = 0
+    scroll_y = 0
+
     def __init__(self):
         self.h_t = ht.hand()
-        self.click_finger = 1
-        self.i = 0
+        self.scroll_mouse = 1
+        self.mouse = Controller()
 
 
     def check_geture(self):
-        self.click()
+
+        self.get_coord()
         self.h_t.hand_track_draw()
+        self.calculate_coord()
+        self.check_scroll()
+        self.scroll()
 
-    def click(self):
-        self.diff_x = self.h_t.fingers[0].x - self.h_t.fingers[1].x
-        self.diff_y = self.h_t.fingers[0].y - self.h_t.fingers[1].y
+    def get_coord(self):
+        pass
 
 
 
-        if self.diff_x<0.03 and self.diff_y<0.03 and self.click_finger <= 1 and self.diff_x != 0:
-            self.click_finger = 10
-            self.i = self.i + 1
-            print("Click ", self.i)
-            #connect.send()
+    def calculate_coord(self):
+        self.diff_x = abs(self.h_t.fingers[4].x - self.h_t.fingers[8].x)
+        self.diff_y = abs(self.h_t.fingers[4].y - self.h_t.fingers[8].y)
+
+        self.scroll_x = self.current_x - self.last_x
+        self.scroll_y = self.current_y - self.last_y
+
+
+    def check_scroll(self):
+
+        if self.diff_x < 0.07 and self.diff_y < 0.07:
+            self.scroll_mouse = self.scroll_mouse + 1
+            if self.scroll_mouse == 1:
+                self.last_x = self.current_x
+                self.last_y = self.current_y
+                print("yes")
+
         else:
-            self.click_finger = self.click_finger -1
+            self.scroll_mouse = 0
+
+
+
+    def scroll(self):
+        self.current_x = self.h_t.fingers[8].x
+        self.current_y = self.h_t.fingers[8].y
+        if self.scroll_mouse > 1 and abs(self.current_x - self.last_x) > 0.009:
+
+
+
+            if self.current_x - self.last_x >0:
+                self.mouse.scroll(0, -1)
+            else:
+                self.mouse.scroll(0, 1)
+
 
 
 

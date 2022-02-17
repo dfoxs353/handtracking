@@ -13,8 +13,8 @@ class hand:
         self.hands = self.mpHands.Hands()
         self.mpDraw = mp.solutions.drawing_utils
         self.fingers = []
-        for finger_v in range(1,6):
-            fn = finger.finger(finger_v*4)
+        for finger_v in range(0,21):
+            fn = finger.finger(finger_v)
 
             self.fingers.append(fn)
 
@@ -29,12 +29,11 @@ class hand:
             for handLms in self.results.multi_hand_landmarks:
                 self.mpDraw.draw_landmarks(self.img, handLms, self.mpHands.HAND_CONNECTIONS)
                 for id, point in enumerate(handLms.landmark):
-                    self.width, self.height, color = self.img.shape
-                    self.width, self.height = int(point.x * self.height), int(point.y * self.width)
-                    if id % 4 == 0 and id != 0:
 
-                        self.fingers[int(id/4)-1].get_coord(point.x, point.y)
+                    self.fingers[id].get_coord(point.x, point.y)
                     if id == 8:
+                        self.width, self.height, color = self.img.shape
+                        self.width, self.height = int(point.x * self.height), int(point.y * self.width)
                         cv2.circle(self.img, (self.width, self.height), 15, (255, 255, 255), cv2.FILLED)
 
     def hand_draw(self):
