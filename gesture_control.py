@@ -1,6 +1,6 @@
 import handtrakcer as ht
-from pynput.mouse import Button, Controller
-#import connect
+#from pynput.mouse import Button, Controller
+import connect
 
 class control:
     last_x = 0
@@ -13,7 +13,7 @@ class control:
     def __init__(self):
         self.h_t = ht.hand()
         self.scroll_mouse = 1
-        self.mouse = Controller()
+        #self.mouse = Controller()
 
 
     def check_geture(self):
@@ -22,7 +22,7 @@ class control:
         self.h_t.hand_track_draw()
         self.calculate_coord()
         self.check_scroll()
-        self.scroll()
+        #self.scroll()
 
     def get_coord(self):
         pass
@@ -41,7 +41,9 @@ class control:
 
         if self.diff_x < 0.07 and self.diff_y < 0.07:
             self.scroll_mouse = self.scroll_mouse + 1
-            if self.scroll_mouse == 1:
+
+            if self.scroll_mouse == 5:
+                connect.send()
                 self.last_x = self.current_x
                 self.last_y = self.current_y
                 print("yes")
