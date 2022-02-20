@@ -12,6 +12,8 @@ class hand:
         self.hands = self.mpHands.Hands()
         self.mpDraw = mp.solutions.drawing_utils
         self.fingers = []
+        self.good, self.img = self.camera.read()
+        self.width, self.height, color = self.img.shape
         for finger_v in range(0,21):
             fn = finger.finger(finger_v)
 
@@ -31,9 +33,9 @@ class hand:
 
                     self.fingers[id].get_coord(point.x, point.y)
                     if id == 8:
-                        self.width, self.height, color = self.img.shape
-                        self.width, self.height = int(point.x * self.height), int(point.y * self.width)
-                        cv2.circle(self.img, (self.width, self.height), 15, (255, 255, 255), cv2.FILLED)
+
+                        self.width_x, self.height_y = int(point.x * self.height), int(point.y * self.width)
+                        cv2.circle(self.img, (self.width_x, self.height_y), 15, (255, 255, 255), cv2.FILLED)
 
     def hand_draw(self):
 
